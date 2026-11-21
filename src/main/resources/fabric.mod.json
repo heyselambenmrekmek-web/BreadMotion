@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "breadmotion",
+  "version": "${version}",
+  "name": "BreadMotion",
+  "description": "Squishy, springy first-person animations: bouncy item swaps, dough-like punches, breathing hands, heavy sway and nibbly eating. Config: config/breadmotion.json (hot-reloaded).",
+  "authors": ["You"],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["com.breadmotion.BreadMotionClient"]
+  },
+  "mixins": ["breadmotion.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "~26.3",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
+}
