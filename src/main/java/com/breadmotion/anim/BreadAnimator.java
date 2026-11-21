@@ -3,7 +3,6 @@ package com.breadmotion.anim;
 import com.breadmotion.BreadConfig;
 import com.breadmotion.BreadMotionClient;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
@@ -13,6 +12,7 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.Items;
+import org.joml.Matrix4f;
 
 /**
  * BreadMotion'ın tüm animasyon matematiği burada.
@@ -83,8 +83,8 @@ public final class BreadAnimator {
             float ly = Mth.rotLerp(pt, prevLagYaw, lagYaw);
             float dYaw = Mth.clamp(Mth.wrapDegrees(cy - ly), -40f, 40f);
             float dPitch = Mth.clamp(Mth.lerp(pt, prevCurPitch, curPitch) - Mth.lerp(pt, prevLagPitch, lagPitch), -40f, 40f);
-            ps.mulPose(Axis.XP.rotationDegrees(dPitch * 0.2f * k));
-            ps.mulPose(Axis.YP.rotationDegrees(dYaw * 0.2f * k));
+            rotX(ps, dPitch * 0.2f * k);
+            rotY(ps, dYaw * 0.2f * k);
             roll += Mth.clamp(-dYaw * 0.2f, -10f, 10f) * k;
         }
 
@@ -156,10 +156,22 @@ public final class BreadAnimator {
 
         // ---------- Uygula: pivota git, döndür, ölçekle, geri dön ----------
         ps.translate(side * PX + dx, PY + dy, PZ + dz);
-        if (tiltX != 0f) ps.mulPose(Axis.XP.rotationDegrees(tiltX));
-        if (roll != 0f) ps.mulPose(Axis.ZP.rotationDegrees(roll));
+        if (tiltX != 0f) rotX(ps, tiltX);
+        if (roll != 0f) rotZ(ps, roll);
         ps.scale(sx, sy, sz);
         ps.translate(-side * PX, -PY, -PZ);
+    }
+
+    private static void rotX(PoseStack ps, float degrees) {
+        ps.mulPose(new Matrix4f().rotationX((float) Math.toRadians(degrees)));
+    }
+
+    private static void rotY(PoseStack ps, float degrees) {
+        ps.mulPose(new Matrix4f().rotationY((float) Math.toRadians(degrees)));
+    }
+
+    private static void rotZ(PoseStack ps, float degrees) {
+        ps.mulPose(new Matrix4f().rotationZ((float) Math.toRadians(degrees)));
     }
 
     private static float easeOutBack(float t) {

@@ -3,7 +3,7 @@ package com.breadmotion.mixin;
 import com.breadmotion.anim.BreadAnimator;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.renderer.ItemInHandRenderer;
+import net.minecraft.client.renderer.FirstPersonHandsAndItemsRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
@@ -12,10 +12,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ItemInHandRenderer.class)
+@Mixin(FirstPersonHandsAndItemsRenderer.class)
 public abstract class ItemInHandRendererMixin {
 
-    @Inject(method = "renderArmWithItem", at = @At("HEAD"))
+    @Inject(method = "submitArmWithItem", at = @At("HEAD"))
     private void breadmotion$begin(AbstractClientPlayer player, float partialTicks, float pitch,
                                    InteractionHand hand, float swingProgress, ItemStack stack,
                                    float equippedProgress, PoseStack poseStack,
@@ -24,7 +24,7 @@ public abstract class ItemInHandRendererMixin {
         BreadAnimator.apply(player, partialTicks, hand, swingProgress, stack, equippedProgress, poseStack);
     }
 
-    @Inject(method = "renderArmWithItem", at = @At("RETURN"))
+    @Inject(method = "submitArmWithItem", at = @At("RETURN"))
     private void breadmotion$end(AbstractClientPlayer player, float partialTicks, float pitch,
                                  InteractionHand hand, float swingProgress, ItemStack stack,
                                  float equippedProgress, PoseStack poseStack,
